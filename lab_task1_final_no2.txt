@@ -1,0 +1,61 @@
+.model small
+.stack 100h
+.data
+a db ?
+b db ?
+msg1 db "Enter 1 if green otherwise 0:$"
+msg2 db "Enter 1 if clear otherwise 0:$"
+msg3 db "The light will stay green$"
+msg4 db "The light is red$"
+.code
+main proc
+    mov ax,@data
+    mov ds,ax
+    
+    mov ah,09
+    lea dx,msg1
+    int 21h
+    mov ah,1
+    int 21h
+    mov a,al
+    mov ah,2
+    mov dl,0ah
+    int 21h
+    mov dl,0dh
+    int 21h
+    mov ah,09
+    lea dx,msg2
+    int 21h
+    
+    mov ah,1
+    int 21h
+    mov b,al
+    mov ah,2
+    mov dl,0ah
+    int 21h
+    mov dl,0dh
+    int 21h
+    mov al,a   
+    cmp al,'1'
+    jne light_red
+    mov al,b
+    cmp al,'1'
+    je light_green
+    jne light_red
+    
+    light_green:
+    mov ah,09
+    lea dx,msg3
+    int 21h
+    jmp end
+    
+    light_red:
+    mov ah,09
+    lea dx,msg4
+    int 21h
+    jmp end
+       
+    end:
+    
+    main endp
+end main

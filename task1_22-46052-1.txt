@@ -1,0 +1,144 @@
+.model small
+.stack 100h
+.data
+msg1 db "Enter current balance(0-9) :$"
+msg2 db "Deposit for 'D' and Withdraw for 'W': $"
+msg3 db "Enter Amount:$"
+msg4 db "New Balance is: $"
+msg5 db "Insufficient funds $"
+msg6 db "Invalid$"
+ 
+balance db ?
+amount  db ?
+var db ?
+ 
+line equ 0ah
+space equ 20h
+carr equ 0dh
+.code
+main proc
+    
+    mov ax,@data
+    mov ds,ax
+    
+    
+    mov ah,09
+    lea dx,msg1
+    int 21h
+    
+     
+    
+    mov ah,1
+    int 21h
+    mov balance,al
+    mov bl,balance
+    
+    mov ah,2
+    mov dl,line
+    int 21h
+    mov dl,carr
+    int 21h
+    
+    
+    mov ah,09
+    lea dx,msg2
+    int 21h
+    
+    mov ah,1
+    int 21h
+    mov var,al
+    
+    mov ah,2
+    mov dl,line
+    int 21h
+    mov dl,carr
+    int 21h
+    
+    mov ah,09
+    lea dx,msg3
+    int 21h
+     
+    mov ah,1
+    int 21h
+    mov amount,al
+    mov bh,amount
+    
+    mov ah,2
+    mov dl,line
+    int 21h
+    mov dl,carr
+    int 21h
+    
+    
+    cmp var,'D'
+    je deposit
+    
+    cmp var,'d'
+    je deposit
+    
+    cmp var,'W'
+    je withdraw
+    
+    cmp var,'w'
+    je withdraw
+    
+    jmp end
+    
+    
+    deposit:
+    
+    add bl,bh
+    sub bl,30h
+    
+    mov ah,09
+    lea dx,msg4
+    int 21h
+    
+    
+    mov ah,2
+    mov dl,bl
+    int 21h
+    
+    
+    jmp end
+    
+    
+    withdraw:
+    
+    cmp bl,bh
+    jb Insufficient 
+    
+    sub bl,bh
+    add bl,30h
+    
+    
+    mov ah,09
+    lea dx,msg4
+    int 21h
+    
+    
+    mov ah,2
+    mov dl,bl
+    int 21h
+    
+    
+    jmp end
+    
+    Insufficient:
+    
+    mov ah,09
+    lea dx,msg5
+    int 21h
+    
+    error:
+    
+    mov ah,09
+    lea dx,msg6
+    int 21h
+    
+    end:
+    
+       
+        
+    main endp
+end main
